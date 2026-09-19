@@ -1,0 +1,187 @@
+{
+  "info": {
+    "name": "Taller Spring Cloud Config",
+    "description": "Pruebas del taller: Config Server (puerto 8888) y Config Client loan-service (8081 default, 8082 dev, 8083 uat).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Config Server (8888)",
+      "item": [
+        {
+          "name": "Server - loan-service/default",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Perfil default con puerto 8081', () => {",
+                  "  const src = pm.response.json().propertySources[0].source;",
+                  "  pm.expect(src['server.port']).to.eql('8081');",
+                  "  pm.expect(src['application.message']).to.eql('Welcome From Default Profile');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/loan-service/default",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8888",
+              "path": ["loan-service", "default"]
+            }
+          }
+        },
+        {
+          "name": "Server - loan-service/dev",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Perfil dev con puerto 8082', () => {",
+                  "  const src = pm.response.json().propertySources[0].source;",
+                  "  pm.expect(src['server.port']).to.eql('8082');",
+                  "  pm.expect(src['application.message']).to.eql('Welcome From Development Profile');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/loan-service/dev",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8888",
+              "path": ["loan-service", "dev"]
+            }
+          }
+        },
+        {
+          "name": "Server - loan-service/uat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Perfil uat con puerto 8083', () => {",
+                  "  const src = pm.response.json().propertySources[0].source;",
+                  "  pm.expect(src['server.port']).to.eql('8083');",
+                  "  pm.expect(src['application.message']).to.eql('Welcome From UAT Profile');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8888/loan-service/uat",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8888",
+              "path": ["loan-service", "uat"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Config Client - loan-service",
+      "item": [
+        {
+          "name": "Cliente default - :8081/message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Mensaje del perfil default', () => pm.expect(pm.response.text()).to.eql('Welcome From Default Profile'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["message"]
+            }
+          }
+        },
+        {
+          "name": "Cliente dev - :8082/message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Mensaje del perfil dev', () => pm.expect(pm.response.text()).to.eql('Welcome From Development Profile'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["message"]
+            }
+          }
+        },
+        {
+          "name": "Cliente uat - :8083/message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Mensaje del perfil uat', () => pm.expect(pm.response.text()).to.eql('Welcome From UAT Profile'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/message",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["message"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

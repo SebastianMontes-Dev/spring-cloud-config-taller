@@ -1,0 +1,1 @@
+{"name":"loan-service","profiles":["uat"],"label":null,"version":null,"state":null,"propertySources":[{"name":"classpath:/config/loan-service-uat.properties","source":{"server.port":"8083","application.message":"Welcome From UAT Profile"}},{"name":"classpath:/config/loan-service.properties","source":{"server.port":"8081","application.message":"Welcome From Default Profile"}}]}
