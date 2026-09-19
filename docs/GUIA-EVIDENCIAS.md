@@ -105,4 +105,15 @@ Guarda las capturas como `initializr-config-server.png` e `initializr-loan-servi
 
 ## 6. Regenerar el informe
 
-Cuando las capturas estén en `docs/evidencias/postman/`, avísame y regenero el informe `.docx` con ellas. Mientras falten, el informe muestra un recuadro `[Insertar captura de Postman: …]` en su lugar; no se inventan capturas.
+Cuando las capturas estén en `docs/evidencias/postman/`, se regenera el informe `.docx` con ellas. Mientras falten, el informe muestra un recuadro `[Insertar captura de Postman: …]` en su lugar; no se inventan capturas.
+
+Para regenerarlo tú mismo (requiere Node y Microsoft Word):
+
+```powershell
+cd docs\informe
+npm install          # solo la primera vez
+npm run generar      # crea docs\Informe-Taller-Spring-Cloud-Config.docx
+.\actualizar-indice.ps1   # Word actualiza el índice con los números de página
+```
+
+También puedes insertar las capturas a mano en Word, reemplazando cada recuadro rojo.

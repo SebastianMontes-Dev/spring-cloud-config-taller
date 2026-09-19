@@ -1,0 +1,7 @@
+$ curl -i http://localhost:8081/message
+HTTP/1.1 200 
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 28
+Date: Sat, 19 Sep 2026 05:22:35 GMT
+
+Welcome From Default Profile
