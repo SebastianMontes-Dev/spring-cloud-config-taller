@@ -16,7 +16,7 @@ const SALIDA = path.join(RAIZ, 'docs', 'Informe-Taller-Spring-Cloud-Config.docx'
 
 const AUTOR = 'Sebastian Montes Olivera';
 const FECHA = '19 de septiembre de 2026';
-const REPO_URL = process.env.REPO_URL || null; // se completa al publicar en GitHub
+const REPO_URL = process.env.REPO_URL || 'https://github.com/SebastianMontes-Dev/spring-cloud-config-taller';
 
 const AZUL = '1F3864';
 const GRIS_BORDE = 'BFBFBF';
