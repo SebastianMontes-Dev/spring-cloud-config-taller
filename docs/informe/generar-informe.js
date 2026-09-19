@@ -286,6 +286,7 @@ add(
   h2('3.6 Ejecución del servidor'),
   parrafo([t('Se ejecutó con '), mono('./mvnw spring-boot:run'), t('. El log confirma el perfil native y el puerto 8888:')]),
   bloqueCodigo(lineasLog('01-consola-config-server.txt', [/profile is active/, /Tomcat started/, /Started ConfigServerApplication/]), 'Consola del Config Server'),
+  ...capturaPostman('consola-config-server', 'Captura de la consola del Config Server: perfil native, puerto 8888 y las consultas atendidas', { opcional: true }),
   h2('3.7 Consulta directa al servidor'),
   parrafo([t('El servidor expone la configuración en '), mono('/{aplicación}/{perfil}'), t('. Para el perfil dev devuelve dos fuentes: primero loan-service-dev.properties y luego loan-service.properties. La primera tiene precedencia, por eso el puerto resultante es 8082 y no 8081.')]),
   bloqueCodigo([`$ curl http://localhost:8888/loan-service/dev`, ...evid('02-server-dev.json').trim().split('\n')], 'Respuesta del servidor (HTTP 200)'),
@@ -352,6 +353,7 @@ add(
     bloqueCodigo(evid(p.curl).trim().split('\n'), `curl, perfil ${p.id}`),
     ...capturaPostman(nombreCaptura[p.id], `Postman: GET http://localhost:${p.puerto}/message (perfil ${p.id})`),
     ...capturaPostman(`consola-${p.id}`, `Consola del cliente con el perfil ${p.id}`, { opcional: true }),
+    ...capturaPostman(`consola-${p.id}-juntos`, `Config Server (derecha) y loan-service (izquierda) ejecutándose a la vez, perfil ${p.id}`, { opcional: true }),
   ]),
 );
 

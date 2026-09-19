@@ -73,7 +73,13 @@ Además de Postman, toma una foto de cada terminal cuando el servicio arranca. E
 - `Located environment: name=loan-service, profiles=[dev]`
 - `Tomcat started on port 8082`
 
-Guárdalas en `docs/evidencias/postman/` con el nombre `consola-<perfil>.png`.
+Guárdalas en `docs/evidencias/postman/` con estos nombres; el informe las incluye si existen:
+
+| Archivo | Qué muestra |
+|---|---|
+| `consola-config-server.png` | Consola del Config Server (perfil native, puerto 8888) |
+| `consola-default.png`, `consola-dev.png`, `consola-uat.png` | Consola del cliente con cada perfil |
+| `consola-<perfil>-juntos.png` | Servidor y cliente corriendo a la vez (por ejemplo `consola-dev-juntos.png`) |
 
 ## 4. Cambiar de perfil editando el archivo, como en el taller
 
