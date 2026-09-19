@@ -1,0 +1,28 @@
+$ curl http://localhost:8888/loan-service-mysql/docker   (lo que sirve el Config Server)
+{"name":"loan-service-mysql","profiles":["docker"],"label":null,"version":null,"state":null,"propertySources":[{"name":"file:/extras-config/loan-service-mysql-docker.properties","source":{"application.message":"Welcome From Loan Service MySQL (docker)","spring.datasource.url":"jdbc:mysql://mysql:3306/loans_db"}},{"name":"file:/extras-config/loan-service-mysql.properties","source":{"server.port":"8084","application.message":"Welcome From Loan Service MySQL (default)","spring.datasource.url":"jdbc:mysql://localhost:3308/loans_db","spring.datasource.username":"loans","spring.datasource.password":"${MYSQL_PASSWORD}","spring.jpa.hibernate.ddl-auto":"validate","spring.jpa.open-in-view":"false"}}]}
+
+$ curl http://localhost:8084/message
+Welcome From Loan Service MySQL (docker)
+HTTP 200
+
+$ curl -i -X POST http://localhost:8084/loans -d {"applicantName":"Ana Torres","amount":15000.50,"termMonths":24}
+HTTP/1.1 201 
+Location: http://localhost:8084/loans/1
+{"id":1,"applicantName":"Ana Torres","amount":15000.50,"termMonths":24,"createdAt":"2026-09-19T05:36:08.477053"}
+
+$ curl -i -X POST http://localhost:8084/loans -d {"applicantName":"Luis Rojas","amount":2500,"termMonths":36}
+HTTP/1.1 201 
+Location: http://localhost:8084/loans/2
+{"id":2,"applicantName":"Luis Rojas","amount":2500.00,"termMonths":36,"createdAt":"2026-09-19T05:36:08.596008"}
+
+$ curl http://localhost:8084/loans
+[{"id":1,"applicantName":"Ana Torres","amount":15000.50,"termMonths":24,"createdAt":"2026-09-19T05:36:08.477053"},{"id":2,"applicantName":"Luis Rojas","amount":2500.00,"termMonths":36,"createdAt":"2026-09-19T05:36:08.596008"}]
+HTTP 200
+
+$ curl http://localhost:8084/loans/999   (no existe)
+{"detail":"Loan 999 not found","instance":"/loans/999","status":404,"title":"Not Found"}
+HTTP 404
+
+$ curl -X POST http://localhost:8084/loans -d {"applicantName":"","amount":0,"termMonths":999}   (invalido)
+{"detail":"Invalid request content.","instance":"/loans","status":400,"title":"Bad Request"}
+HTTP 400

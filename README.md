@@ -53,6 +53,10 @@ cd config-server && ./mvnw test
 cd loan-service && ./mvnw test
 ```
 
+## Extras opcionales
+
+La carpeta [`extras/`](extras) agrega, sin modificar el taller: Docker Compose con MySQL, una variante del cliente que guarda préstamos en MySQL y un perfil `git` para el Config Server. Ver [`extras/README.md`](extras/README.md).
+
 ## Documentación
 
 - [`docs/Informe-Taller-Spring-Cloud-Config.docx`](docs/Informe-Taller-Spring-Cloud-Config.docx): informe con evidencias

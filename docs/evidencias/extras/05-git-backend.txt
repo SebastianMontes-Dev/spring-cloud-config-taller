@@ -1,0 +1,17 @@
+$ curl http://localhost:8888/loan-service/default
+{"name":"loan-service","profiles":["default"],"label":null,"version":"59c32532246ce2d287d2e9f9b5228eb01a2d9b3a","state":"","propertySources":[{"name":"file:///C:/Users/sabas/Documentos/spring-cloud-config-taller/extras/git-backend/config-repo/loan-service.properties","source":{"server.port":"8081","application.message":"Welcome From Default Profile (Git)"}}]}
+
+$ curl http://localhost:8888/loan-service/dev
+{"name":"loan-service","profiles":["dev"],"label":null,"version":"59c32532246ce2d287d2e9f9b5228eb01a2d9b3a","state":"","propertySources":[{"name":"file:///C:/Users/sabas/Documentos/spring-cloud-config-taller/extras/git-backend/config-repo/loan-service-dev.properties","source":{"server.port":"8082","application.message":"Welcome From Development Profile (Git)"}},{"name":"file:///C:/Users/sabas/Documentos/spring-cloud-config-taller/extras/git-backend/config-repo/loan-service.properties","source":{"server.port":"8081","application.message":"Welcome From Default Profile (Git)"}}]}
+
+$ curl http://localhost:8888/loan-service/uat
+{"name":"loan-service","profiles":["uat"],"label":null,"version":"59c32532246ce2d287d2e9f9b5228eb01a2d9b3a","state":"","propertySources":[{"name":"file:///C:/Users/sabas/Documentos/spring-cloud-config-taller/extras/git-backend/config-repo/loan-service-uat.properties","source":{"server.port":"8083","application.message":"Welcome From UAT Profile (Git)"}},{"name":"file:///C:/Users/sabas/Documentos/spring-cloud-config-taller/extras/git-backend/config-repo/loan-service.properties","source":{"server.port":"8081","application.message":"Welcome From Default Profile (Git)"}}]}
+
+$ (config-server con SPRING_PROFILES_ACTIVE=git; loan-service del taller sin cambios, perfil dev)
+$ curl -i http://localhost:8082/message
+HTTP/1.1 200 
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 38
+Date: Sat, 19 Sep 2026 05:36:56 GMT
+
+Welcome From Development Profile (Git)

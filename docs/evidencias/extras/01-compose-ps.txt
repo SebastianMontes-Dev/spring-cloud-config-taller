@@ -1,0 +1,5 @@
+$ docker compose ps
+NAME                            IMAGE                                           STATUS                    PORTS
+taller-cfg-config-server        spring-cloud-config-taller-config-server        Up 15 seconds (healthy)   0.0.0.0:8888->8888/tcp, [::]:8888->8888/tcp
+taller-cfg-loan-service-mysql   spring-cloud-config-taller-loan-service-mysql   Up 4 seconds              0.0.0.0:8084->8084/tcp, [::]:8084->8084/tcp
+taller-cfg-mysql                mysql:8                                         Up 15 seconds (healthy)   0.0.0.0:3308->3306/tcp, [::]:3308->3306/tcp

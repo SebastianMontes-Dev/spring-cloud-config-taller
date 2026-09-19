@@ -363,20 +363,67 @@ add(
   bloqueCodigo(codigo('loan-service/src/test/java/com/example/loanservice/LoanServiceApplicationTests.java'), 'LoanServiceApplicationTests.java'),
 );
 
-// 7. Observaciones
+// 7. Extras (opcionales)
+// Salida de mysql (columnas con tabulador): la primera línea es el comando, el resto la tabla.
+function alinearColumnas(lineas) {
+  const [comando, ...filas] = lineas;
+  const celdas = filas.map((l) => l.split('\t'));
+  const anchos = celdas[0].map((_, i) => Math.max(...celdas.map((r) => r[i].length)));
+  return [comando, ...celdas.map((r) => r.map((c, i) => c.padEnd(anchos[i])).join('  ').trimEnd())];
+}
+const bloques = (f) => leer(EVID, 'extras', f).trim().split(/\n\s*\n/);
+const git = bloques('05-git-backend.txt');
+const api = bloques('02-api-loans.txt');
 add(
-  h1('7. Observaciones sobre el enunciado'),
+  h1('7. Extras opcionales'),
+  parrafo([t('Fuera del alcance del enunciado, el repositorio incluye extras en la carpeta '), mono('extras/'), t('. '), t('No modifican ningún archivo de config-server ni de loan-service', { bold: true }), t(': se activan con variables de entorno y carpetas adicionales.')]),
+  h2('7.1 Perfil git del Config Server'),
+  parrafo([t('En lugar de leer '), mono('classpath:/config'), t(', el servidor puede servir la configuración desde un repositorio Git. Se activa con '), mono('SPRING_PROFILES_ACTIVE=git'), t(', que tiene precedencia sobre el '), mono('native'), t(' del application.properties. Los archivos de ejemplo terminan en "(Git)" para distinguir el origen de cada respuesta.')]),
+  bloqueCodigo(codigo('extras/git-backend/application-git.properties').filter((l) => !l.startsWith('#')), 'extras/git-backend/application-git.properties'),
+  parrafo([t('El campo '), mono('version'), t(' de la respuesta es el hash del commit del que se leyó la configuración. El loan-service del taller, sin ningún cambio, recibe el mensaje del repositorio Git:')]),
+  bloqueCodigo(git[1].split('\n'), 'Servidor con perfil git: GET /loan-service/dev'),
+  // git[3] = comando y cabeceras del cliente; git[4] = cuerpo (los separa la línea en blanco de HTTP)
+  bloqueCodigo([...git[3].split('\n').filter((l) => !/^(Content-|Date)/.test(l)), '', git[4]], 'loan-service (perfil dev, sin cambios) contra ese servidor'),
+  h2('7.2 Docker Compose y MySQL'),
+  parrafo([t('Un '), mono('docker-compose.yml'), t(' levanta tres servicios: MySQL, el Config Server del taller y '), mono('loan-service-mysql'), t(', una variante separada del cliente que guarda préstamos en MySQL con las capas controller, service y repository, DTOs con validación y transacciones.')]),
+  tabla(['Servicio', 'Puerto', 'Función'], [
+    ['mysql (mysql:8)', '3308', 'Base loans_db; el esquema se crea con db/schema.sql'],
+    ['config-server', '8888', 'El del taller, más la carpeta extras/config con la configuración del nuevo servicio'],
+    ['loan-service-mysql', '8084', 'API /loans; su configuración y la URL de MySQL vienen del Config Server'],
+  ], [2500, 1100, ANCHO - 3600], { mono: [0] }),
+  espacio(),
+  bloqueCodigo(codigo('extras/config/loan-service-mysql.properties').filter((l) => !l.startsWith('#')), 'extras/config/loan-service-mysql.properties (servido por el Config Server)'),
+  parrafo([t('La contraseña no pasa por el Config Server. ', { bold: true }), t('El servidor no tiene definida MYSQL_PASSWORD, por lo que entrega el texto ${MYSQL_PASSWORD} sin resolver y el cliente lo completa con su propia variable de entorno. Las credenciales viven en un archivo .env fuera de git; el repositorio solo incluye .env.example.')]),
+  parrafo([t('Estado de los contenedores, extraído de la salida de '), mono('docker compose ps'), t(':')]),
+  tabla(['Contenedor', 'Estado', 'Puertos'],
+    evid('extras/01-compose-ps.txt').trim().split('\n').slice(2).map((l) => {
+      const c = l.trim().split(/\s{2,}/); // NAME, IMAGE, STATUS, PORTS
+      return [c[0], c[2], c[3].split(',')[0]];
+    }), [3000, 2900, ANCHO - 5900], { mono: [0, 2] }),
+  espacio(),
+  parrafo('Prueba de la API. Los préstamos se crean con POST y se consultan con GET; los datos inválidos responden 400 y los inexistentes 404:'),
+  bloqueCodigo(api.slice(1).join('\n\n').split('\n'), 'Respuestas de la API'),
+  parrafo('Las filas quedaron guardadas en MySQL, con los mismos valores que devolvió la API:'),
+  bloqueCodigo(alinearColumnas(evid('extras/03-mysql-filas.txt').trim().split('\n')), 'Consulta directa a la base'),
+  bloqueCodigo(evid('extras/04-consola-loan-service-mysql.txt').trim().split('\n'), 'Consola de loan-service-mysql (perfil docker)'),
+  h2('7.3 Pruebas del extra'),
+  parrafo([t('El módulo incluye 4 tests unitarios del servicio, con JUnit 5 y Mockito, que pasan con '), mono('./mvnw test'), t(': creación, listado, búsqueda por id y error cuando el préstamo no existe.')]),
+);
+
+// 8. Observaciones
+add(
+  h1('8. Observaciones sobre el enunciado'),
   numerado([t('Puerto del servidor. ', { bold: true }), t('El texto dice 8888, el application.properties dice 8080 y el cliente importa desde 8888. Se usó 8888.')]),
   numerado([t('Nombres y claves traducidos. ', { bold: true }), t('La versión en español del taller traduce nombres técnicos: préstamo-servicio.propiedades, servidor.puerto, aplicación.mensaje y la etiqueta <dependencia>. Se usaron los nombres reales: loan-service.properties, server.port, application.message y <dependency>.')]),
   numerado([t('Mensajes en inglés. ', { bold: true }), t('En las capturas de Postman del ejercicio los mensajes salen en inglés ("Welcome From Development Profile", "Welcome From UAT Profile"). Se usaron esos textos y, por el mismo patrón, "Welcome From Default Profile" para el perfil predeterminado.')]),
-  numerado([t('MySQL. ', { bold: true }), t('El enunciado lista MySQL con Workbench como requisito, pero ni el servidor ni el cliente lo utilizan. El taller queda completo sin base de datos.')]),
+  numerado([t('MySQL. ', { bold: true }), t('El enunciado lista MySQL con Workbench como requisito, pero ni el servidor ni el cliente lo utilizan. El taller queda completo sin base de datos. El extra de la sección 7 sí incorpora MySQL.')]),
   numerado([t('Versiones. ', { bold: true }), t('El taller no fija versiones. Se usaron las vigentes: Spring Boot 4.1.1 con Spring Cloud 2025.1.3. Con Spring Boot 4, Spring Initializr genera spring-boot-starter-webmvc en lugar de spring-boot-starter-web; funcionalmente es el mismo starter de Spring MVC.')]),
   numerado([t('IDE. ', { bold: true }), t('El enunciado menciona Eclipse con Spring Tool Suite. Aquí los proyectos se ejecutaron desde la terminal; son proyectos Maven estándar importables en ese IDE.')]),
 );
 
 // 8. Conclusiones
 add(
-  h1('8. Conclusiones'),
+  h1('9. Conclusiones'),
   punto('La configuración de loan-service vive únicamente en el Config Server; el cliente solo conserva su nombre, la URL del servidor y el perfil activo.'),
   punto('Cambiar el perfil cambia el puerto y el mensaje sin recompilar ni tocar el código del cliente: default usa 8081, dev usa 8082 y uat usa 8083.'),
   punto('El orden de precedencia funciona como se esperaba: el archivo específico del perfil se impone sobre loan-service.properties.'),
